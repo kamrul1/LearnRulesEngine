@@ -22,70 +22,83 @@ namespace RulesEngine
             }
             return 0m;
         }
-    
 
-        public decimal CalculateDiscountPercentage(Customer customer)
+        private decimal CalculateDiscountForVeteran(Customer customer)
         {
-            bool isBirthday = customer.DateOfBirth.HasValue && 
-                customer.DateOfBirth.Value.Month == DateTime.Today.Month && 
-                customer.DateOfBirth.Value.Day == DateTime.Today.Day;
 
-            decimal discount = 0m;
+            if (customer.IsVeteran)
+            {
+                return .10m;
+            }
 
-            discount = CalculateDiscountForFirstTimeCustomer(customer);
+            return 0m;
 
+        }
+
+        public decimal CalculateDiscountForSeniors(Customer customer)
+        {
+
+            if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
+            {
+                return .05m;
+            }
+
+            return 0m;
+
+        }
+
+        public decimal CalculateDiscountForBirthday(Customer customer, decimal currentDiscount)
+        {
+            bool isBirthday = customer.DateOfBirth.HasValue &&
+                    customer.DateOfBirth.Value.Month == DateTime.Today.Month &&
+                    customer.DateOfBirth.Value.Day == DateTime.Today.Day;
+
+            if (isBirthday) return currentDiscount + 0.10m;
+            return currentDiscount;
+
+        }
+
+        private decimal CalcluateDiscountForLoyalCustomer(Customer customer)
+        {
             if (customer.DateOfFirstPurchase.HasValue)
             {
                 if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-15))
                 {
-                    if (isBirthday) return .25m;
                     return .15m;
                 }
                 if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-10))
                 {
-                    if (isBirthday) return .22m;
                     return .12m;
                 }
                 if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-5))
                 {
-                    if (isBirthday) return .20m;
                     return .10m;
                 }
-                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-2) &&
-                    !customer.IsVeteran)
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-2))
                 {
-                    if (isBirthday) return .18m;
                     return .08m;
                 }
-                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-1) &&
-                    !customer.IsVeteran)
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-1))
                 {
-                    if (isBirthday) return .15m;
                     return .05m;
                 }
             }
-
-
-            if (customer.IsVeteran)
-            {
-                if (isBirthday) return .20m;
-                return .10m;
-            }
-            
-            var d = DateTime.Now.AddYears(-65);
-
-            var tst = customer.DateOfBirth < DateTime.Now.AddYears(-65);
-
-            if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
-            {
-                if (isBirthday) return .15m;
-                return Math.Max(discount,.05m);
-            }
-
-            if (isBirthday) return .10m;
-
-  
-            return discount;
+            return 0;
         }
+
+        public decimal CalculateDiscountPercentage(Customer customer)
+        {
+            decimal discount = 0m;
+
+            discount = Math.Max(discount, CalculateDiscountForFirstTimeCustomer(customer));
+            discount = Math.Max(discount, CalcluateDiscountForLoyalCustomer(customer));
+            discount = Math.Max(discount, CalculateDiscountForVeteran(customer));
+            discount = Math.Max(discount, CalculateDiscountForSeniors(customer));
+            discount = Math.Max(discount, CalculateDiscountForBirthday(customer, discount));
+
+            return discount;
+
+        }
+
     }
 }
