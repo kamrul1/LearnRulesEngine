@@ -36,48 +36,22 @@ namespace RulesEngine
         }
     }
 
-
-    public class DiscountCalculator
+    public class SeniorDiscountRule : IDiscountRule
     {
-
-
-        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
+        public decimal CalculateDiscount(Customer customer)
         {
-
-            return new FirstTimeCustomerRule().CalculateDiscount(customer);
-        }
-
-        private decimal CalculateDiscountForVeteran(Customer customer)
-        {
-            return new VeteranDiscountRule().CalculateDiscount(customer);
-
-
-        }
-
-        public decimal CalculateDiscountForSeniors(Customer customer)
-        {
-
             if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
             {
                 return .05m;
             }
 
             return 0m;
-
         }
+    }
 
-        public decimal CalculateDiscountForBirthday(Customer customer, decimal currentDiscount)
-        {
-            bool isBirthday = customer.DateOfBirth.HasValue &&
-                    customer.DateOfBirth.Value.Month == DateTime.Today.Month &&
-                    customer.DateOfBirth.Value.Day == DateTime.Today.Day;
-
-            if (isBirthday) return currentDiscount + 0.10m;
-            return currentDiscount;
-
-        }
-
-        private decimal CalcluateDiscountForLoyalCustomer(Customer customer)
+    public class LoyalCustomerDisountRule : IDiscountRule
+    {
+        public decimal CalculateDiscount(Customer customer)
         {
             if (customer.DateOfFirstPurchase.HasValue)
             {
@@ -103,6 +77,48 @@ namespace RulesEngine
                 }
             }
             return 0;
+        }
+    }
+
+
+    public class DiscountCalculator
+    {
+
+
+        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
+        {
+
+            return new FirstTimeCustomerRule().CalculateDiscount(customer);
+        }
+
+        private decimal CalculateDiscountForVeteran(Customer customer)
+        {
+            return new VeteranDiscountRule().CalculateDiscount(customer);
+
+
+        }
+
+        public decimal CalculateDiscountForSeniors(Customer customer)
+        {
+
+            return new SeniorDiscountRule().CalculateDiscount(customer);
+
+        }
+
+        public decimal CalculateDiscountForBirthday(Customer customer, decimal currentDiscount)
+        {
+            bool isBirthday = customer.DateOfBirth.HasValue &&
+                    customer.DateOfBirth.Value.Month == DateTime.Today.Month &&
+                    customer.DateOfBirth.Value.Day == DateTime.Today.Day;
+
+            if (isBirthday) return currentDiscount + 0.10m;
+            return currentDiscount;
+
+        }
+
+        private decimal CalcluateDiscountForLoyalCustomer(Customer customer)
+        {
+            return new LoyalCustomerDisountRule().CalculateDiscount(customer);
         }
 
         public decimal CalculateDiscountPercentage(Customer customer)
