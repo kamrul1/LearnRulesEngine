@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RulesEngine.Console", "Rule
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{664F691E-F2F0-4839-B6B9-411BC3D79414}"
 	ProjectSection(SolutionItems) = preProject
-		build\README.md = build\README.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{75E1BF28-CB62-45A8-8E1E-DC558F2D0841}"

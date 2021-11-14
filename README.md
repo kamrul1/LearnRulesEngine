@@ -49,7 +49,7 @@ Any code with Cyclomatric Complexity>10 will likely violates Open/Closed Princip
 - Extract methods to have common signature e.g. evaluate interface
 - Replace original method logic with call to Rules engine
 
-
+See all iteration of the [Rule Engine development with githistory](https://github.githistory.xyz/kamrul1/LearnRulesEngine/blob/master/RulesEngine/DiscountCalculator.cs)
 
 ## Other notes
 ```
