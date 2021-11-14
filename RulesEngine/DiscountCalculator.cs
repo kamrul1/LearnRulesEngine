@@ -6,21 +6,32 @@ using System.Threading.Tasks;
 
 namespace RulesEngine
 {
-    public class DiscountCalculator
+    public interface IDiscountRule
     {
-        public interface IDiscountRule
-        {
-            decimal CalculateDiscount(Customer customer);
-        }
+        decimal CalculateDiscount(Customer customer);
+    }
 
-        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
+    public class FirstTimeCustomerRule : IDiscountRule
+    {
+        public decimal CalculateDiscount(Customer customer)
         {
-
             if (!customer.DateOfFirstPurchase.HasValue)
             {
                 return .15m;
             }
             return 0m;
+        }
+    }
+
+
+    public class DiscountCalculator
+    {
+
+
+        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
+        {
+
+            return new FirstTimeCustomerRule().CalculateDiscount(customer);
         }
 
         private decimal CalculateDiscountForVeteran(Customer customer)
