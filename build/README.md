@@ -46,4 +46,12 @@ Any code with Cyclomatric Complexity>10 will likely violates Open/Closed Princip
 
 
 
+## Other notes
+```
+List method
+AddRange, InsertRange. AddRange adds an entire collection of elements. 
+It can replace tedious foreach-loops that repeatedly call Add on List.
+```
+
+
 

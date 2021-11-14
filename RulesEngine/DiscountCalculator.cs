@@ -94,10 +94,28 @@ namespace RulesEngine
     }
 
 
+    public class DiscountRuleEngine
+    {
+        List<IDiscountRule> rules = new List<IDiscountRule>();
+
+        public DiscountRuleEngine(IEnumerable<IDiscountRule> rule)
+        {
+            rules.AddRange(rules);
+        }
+
+        public decimal CalculateDiscountPercentage(Customer customer)
+        {
+            decimal discount = 0m;
+            foreach (var rule in rules)
+            {
+                discount = Math.Max(discount, rule.CalculateDiscount(customer, discount));
+            }
+            return discount;
+        }
+    }
+
     public class DiscountCalculator
     {
-
- 
 
         public decimal CalculateDiscountPercentage(Customer customer)
         {
