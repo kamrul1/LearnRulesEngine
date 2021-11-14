@@ -7,6 +7,11 @@ Souce Link: https://github.com/ardalis/DesignPatternsInCSharp/tree/master/Design
 This is a [behavioral design pattern](https://refactoring.guru/design-patterns/behavioral-patterns) and is 
 used to model behaviour of a part of a system.
 
+Rules engine is similar to the Specification Design Pattern, this only deals with individual rule rather then a collection as done by
+Rules engine.
+
+
+
 ## Problem Rules Engines solve
   
 Eliminate complex conditional logic into modular/maintainable code
