@@ -15,7 +15,9 @@ Eliminate complex conditional logic into modular/maintainable code
 
 **Engine Part** - processes the rules and applies them to produce a result
 
-**Rules Part** - multiple parts that describe the condition, are usually grouped together
+**Rules Collection** - multiple parts that describe the condition, are usually grouped together
+
+**System Input**  - information that needs to be processed e.g. customer/context discount
 
 
 # Defining Rules
@@ -24,6 +26,23 @@ Eliminate complex conditional logic into modular/maintainable code
 > Rules are managed using an engine that chooses which rule(s) to apply
 > Rules may be ordered, aggregated, or filtered as appropriate
 
+
+A way to check if a method is go complex is to use the VS2022 menubar ```Analyze>Calculate Code Metrics>For Solution```
+
+Any code with Cyclomatric Complexity>10 will likely violates Open/Closed Principles.  You should try to refactor.
+
+## Working Rules 
+
+- Keep individual rules simple
+- Allow for complexity through combinations of simple rules
+- Decide how rules will combine or be chosen
+- Consider whether rule ordering will matter in evalution
+
+## Steps to applying rules
+
+- Have tests, so that when rules applied you will know if rules are broken
+- Extract methods to have common signature e.g. evaluate interface
+- Replace original method logic with call to Rules engine
 
 
 

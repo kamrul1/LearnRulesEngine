@@ -8,6 +8,12 @@ namespace RulesEngine
 {
     public class DiscountCalculator
     {
+        public interface IDiscountRule
+        {
+            decimal CalculateDiscount(Customer customer);
+        }
+
+
         public decimal CalculateDiscountPercentage(Customer customer)
         {
             bool isBirthday = customer.DateOfBirth.HasValue && 
