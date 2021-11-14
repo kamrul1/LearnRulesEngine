@@ -8,12 +8,12 @@ namespace RulesEngine
 {
     public interface IDiscountRule
     {
-        decimal CalculateDiscount(Customer customer);
+        decimal CalculateDiscount(Customer customer, decimal currentDiscount);
     }
 
     public class FirstTimeCustomerRule : IDiscountRule
     {
-        public decimal CalculateDiscount(Customer customer)
+        public decimal CalculateDiscount(Customer customer, decimal currentDiscount)
         {
             if (!customer.DateOfFirstPurchase.HasValue)
             {
@@ -25,7 +25,7 @@ namespace RulesEngine
 
     public class VeteranDiscountRule : IDiscountRule
     {
-        public decimal CalculateDiscount(Customer customer)
+        public decimal CalculateDiscount(Customer customer, decimal currentDiscount)
         {
             if (customer.IsVeteran)
             {
@@ -38,7 +38,7 @@ namespace RulesEngine
 
     public class SeniorDiscountRule : IDiscountRule
     {
-        public decimal CalculateDiscount(Customer customer)
+        public decimal CalculateDiscount(Customer customer, decimal currentDiscount)
         {
             if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
             {
@@ -51,7 +51,7 @@ namespace RulesEngine
 
     public class LoyalCustomerDisountRule : IDiscountRule
     {
-        public decimal CalculateDiscount(Customer customer)
+        public decimal CalculateDiscount(Customer customer, decimal currentDiscount)
         {
             if (customer.DateOfFirstPurchase.HasValue)
             {
@@ -101,10 +101,10 @@ namespace RulesEngine
         {
             decimal discount = 0m;
 
-            discount = Math.Max(discount, new FirstTimeCustomerRule().CalculateDiscount(customer));
-            discount = Math.Max(discount, new LoyalCustomerDisountRule().CalculateDiscount(customer));
-            discount = Math.Max(discount, new VeteranDiscountRule().CalculateDiscount(customer));
-            discount = Math.Max(discount, new SeniorDiscountRule().CalculateDiscount(customer));
+            discount = Math.Max(discount, new FirstTimeCustomerRule().CalculateDiscount(customer, discount));
+            discount = Math.Max(discount, new LoyalCustomerDisountRule().CalculateDiscount(customer, discount));
+            discount = Math.Max(discount, new VeteranDiscountRule().CalculateDiscount(customer, discount));
+            discount = Math.Max(discount, new SeniorDiscountRule().CalculateDiscount(customer, discount));
             discount = Math.Max(discount, CalculateDiscountForBirthday(customer, discount));
 
             return discount;
