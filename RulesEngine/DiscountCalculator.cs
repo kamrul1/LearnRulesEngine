@@ -23,6 +23,19 @@ namespace RulesEngine
         }
     }
 
+    public class VeteranDiscountRule : IDiscountRule
+    {
+        public decimal CalculateDiscount(Customer customer)
+        {
+            if (customer.IsVeteran)
+            {
+                return .10m;
+            }
+
+            return 0m;
+        }
+    }
+
 
     public class DiscountCalculator
     {
@@ -36,13 +49,8 @@ namespace RulesEngine
 
         private decimal CalculateDiscountForVeteran(Customer customer)
         {
+            return new VeteranDiscountRule().CalculateDiscount(customer);
 
-            if (customer.IsVeteran)
-            {
-                return .10m;
-            }
-
-            return 0m;
 
         }
 
