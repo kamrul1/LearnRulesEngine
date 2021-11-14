@@ -100,7 +100,7 @@ namespace RulesEngine
 
         public DiscountRuleEngine(IEnumerable<IDiscountRule> rule)
         {
-            rules.AddRange(rules);
+            rules.AddRange(rule);
         }
 
         public decimal CalculateDiscountPercentage(Customer customer)
@@ -119,15 +119,17 @@ namespace RulesEngine
 
         public decimal CalculateDiscountPercentage(Customer customer)
         {
-            decimal discount = 0m;
 
-            discount = Math.Max(discount, new FirstTimeCustomerRule().CalculateDiscount(customer, discount));
-            discount = Math.Max(discount, new LoyalCustomerDisountRule().CalculateDiscount(customer, discount));
-            discount = Math.Max(discount, new VeteranDiscountRule().CalculateDiscount(customer, discount));
-            discount = Math.Max(discount, new SeniorDiscountRule().CalculateDiscount(customer, discount));
-            discount = Math.Max(discount, new BirthdayDiscountRule().CalculateDiscount(customer, discount));
+            var rules = new List<IDiscountRule>();
+            rules.Add(new FirstTimeCustomerRule());
+            rules.Add(new LoyalCustomerDisountRule());
+            rules.Add(new VeteranDiscountRule());
+            rules.Add(new SeniorDiscountRule());
+            rules.Add(new BirthdayDiscountRule());
 
-            return discount;
+            var engine = new DiscountRuleEngine(rules);
+
+            return engine.CalculateDiscountPercentage(customer);
 
         }
 
