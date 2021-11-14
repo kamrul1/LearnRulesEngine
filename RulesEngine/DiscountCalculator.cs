@@ -80,11 +80,9 @@ namespace RulesEngine
         }
     }
 
-
-    public class DiscountCalculator
+    public class BirthdayDiscountRule : IDiscountRule
     {
-
-        public decimal CalculateDiscountForBirthday(Customer customer, decimal currentDiscount)
+        public decimal CalculateDiscount(Customer customer, decimal currentDiscount)
         {
             bool isBirthday = customer.DateOfBirth.HasValue &&
                     customer.DateOfBirth.Value.Month == DateTime.Today.Month &&
@@ -92,8 +90,12 @@ namespace RulesEngine
 
             if (isBirthday) return currentDiscount + 0.10m;
             return currentDiscount;
-
         }
+    }
+
+
+    public class DiscountCalculator
+    {
 
  
 
@@ -105,7 +107,7 @@ namespace RulesEngine
             discount = Math.Max(discount, new LoyalCustomerDisountRule().CalculateDiscount(customer, discount));
             discount = Math.Max(discount, new VeteranDiscountRule().CalculateDiscount(customer, discount));
             discount = Math.Max(discount, new SeniorDiscountRule().CalculateDiscount(customer, discount));
-            discount = Math.Max(discount, CalculateDiscountForBirthday(customer, discount));
+            discount = Math.Max(discount, new BirthdayDiscountRule().CalculateDiscount(customer, discount));
 
             return discount;
 
