@@ -13,6 +13,16 @@ namespace RulesEngine
             decimal CalculateDiscount(Customer customer);
         }
 
+        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
+        {
+
+            if (!customer.DateOfFirstPurchase.HasValue)
+            {
+                return .15m;
+            }
+            return 0m;
+        }
+    
 
         public decimal CalculateDiscountPercentage(Customer customer)
         {
@@ -20,11 +30,11 @@ namespace RulesEngine
                 customer.DateOfBirth.Value.Month == DateTime.Today.Month && 
                 customer.DateOfBirth.Value.Day == DateTime.Today.Day;
 
-            if (!customer.DateOfFirstPurchase.HasValue)
-            {
-                return .15m;
-            }
-            else
+            decimal discount = 0m;
+
+            discount = CalculateDiscountForFirstTimeCustomer(customer);
+
+            if (customer.DateOfFirstPurchase.HasValue)
             {
                 if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-15))
                 {
@@ -55,21 +65,27 @@ namespace RulesEngine
                 }
             }
 
+
             if (customer.IsVeteran)
             {
                 if (isBirthday) return .20m;
                 return .10m;
             }
+            
+            var d = DateTime.Now.AddYears(-65);
+
+            var tst = customer.DateOfBirth < DateTime.Now.AddYears(-65);
 
             if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
             {
                 if (isBirthday) return .15m;
-                return .05m;
+                return Math.Max(discount,.05m);
             }
 
             if (isBirthday) return .10m;
 
-            return 0;
+  
+            return discount;
         }
     }
 }
