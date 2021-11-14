@@ -124,8 +124,8 @@ namespace RulesEngine
 
             IEnumerable<IDiscountRule> rules 
                 = this.GetType().Assembly.GetTypes()
-                .Where(p => ruleType.IsAssignableFrom(p) && !p.IsInterface)
-                .Select(r => Activator.CreateInstance(r) as IDiscountRule);
+                .Where(p => ruleType.IsAssignableFrom(p) && !p.IsInterface) //interface
+                .Select(r => Activator.CreateInstance(r) as IDiscountRule); //projection
 
             var engine = new DiscountRuleEngine(rules);
 
