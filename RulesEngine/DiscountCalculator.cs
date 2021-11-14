@@ -84,27 +84,6 @@ namespace RulesEngine
     public class DiscountCalculator
     {
 
-
-        private decimal CalculateDiscountForFirstTimeCustomer(Customer customer)
-        {
-
-            return new FirstTimeCustomerRule().CalculateDiscount(customer);
-        }
-
-        private decimal CalculateDiscountForVeteran(Customer customer)
-        {
-            return new VeteranDiscountRule().CalculateDiscount(customer);
-
-
-        }
-
-        public decimal CalculateDiscountForSeniors(Customer customer)
-        {
-
-            return new SeniorDiscountRule().CalculateDiscount(customer);
-
-        }
-
         public decimal CalculateDiscountForBirthday(Customer customer, decimal currentDiscount)
         {
             bool isBirthday = customer.DateOfBirth.HasValue &&
@@ -116,19 +95,16 @@ namespace RulesEngine
 
         }
 
-        private decimal CalcluateDiscountForLoyalCustomer(Customer customer)
-        {
-            return new LoyalCustomerDisountRule().CalculateDiscount(customer);
-        }
+ 
 
         public decimal CalculateDiscountPercentage(Customer customer)
         {
             decimal discount = 0m;
 
-            discount = Math.Max(discount, CalculateDiscountForFirstTimeCustomer(customer));
-            discount = Math.Max(discount, CalcluateDiscountForLoyalCustomer(customer));
-            discount = Math.Max(discount, CalculateDiscountForVeteran(customer));
-            discount = Math.Max(discount, CalculateDiscountForSeniors(customer));
+            discount = Math.Max(discount, new FirstTimeCustomerRule().CalculateDiscount(customer));
+            discount = Math.Max(discount, new LoyalCustomerDisountRule().CalculateDiscount(customer));
+            discount = Math.Max(discount, new VeteranDiscountRule().CalculateDiscount(customer));
+            discount = Math.Max(discount, new SeniorDiscountRule().CalculateDiscount(customer));
             discount = Math.Max(discount, CalculateDiscountForBirthday(customer, discount));
 
             return discount;
