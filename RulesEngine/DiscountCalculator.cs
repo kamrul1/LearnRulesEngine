@@ -10,42 +10,60 @@ namespace RulesEngine
     {
         public decimal CalculateDiscountPercentage(Customer customer)
         {
-            decimal discount = 0;
-            if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
+            bool isBirthday = customer.DateOfBirth.HasValue && 
+                customer.DateOfBirth.Value.Month == DateTime.Today.Month && 
+                customer.DateOfBirth.Value.Day == DateTime.Today.Day;
+
+            if (!customer.DateOfFirstPurchase.HasValue)
             {
-                // senior discount 5%
-                discount = .05m;
-            }
-            if (customer.DateOfFirstPurchase.HasValue)
-            {
-                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-1))
-                {
-                    // after 1 year, loyal customers get 10%
-                    discount = Math.Max(discount, .10m);
-                    if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-5))
-                    {
-                        // after 5 years, 12%
-                        discount = Math.Max(discount, .12m);
-                        if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-10))
-                        {
-                            // after 10 years, 20%
-                            discount = Math.Max(discount, .2m);
-                        }
-                    }
-                }
+                return .15m;
             }
             else
             {
-                // first time purchase discount of 15%
-                discount = Math.Max(discount, .15m);
-            }
-            if (customer.IsVeteran)
-            {
-                // veterans get 10%
-                discount = Math.Max(discount, .10m);
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-15))
+                {
+                    if (isBirthday) return .25m;
+                    return .15m;
+                }
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-10))
+                {
+                    if (isBirthday) return .22m;
+                    return .12m;
+                }
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-5))
+                {
+                    if (isBirthday) return .20m;
+                    return .10m;
+                }
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-2) &&
+                    !customer.IsVeteran)
+                {
+                    if (isBirthday) return .18m;
+                    return .08m;
+                }
+                if (customer.DateOfFirstPurchase.Value < DateTime.Now.AddYears(-1) &&
+                    !customer.IsVeteran)
+                {
+                    if (isBirthday) return .15m;
+                    return .05m;
+                }
             }
 
-            return discount;
+            if (customer.IsVeteran)
+            {
+                if (isBirthday) return .20m;
+                return .10m;
+            }
+
+            if (customer.DateOfBirth < DateTime.Now.AddYears(-65))
+            {
+                if (isBirthday) return .15m;
+                return .05m;
+            }
+
+            if (isBirthday) return .10m;
+
+            return 0;
         }
     }
 }
