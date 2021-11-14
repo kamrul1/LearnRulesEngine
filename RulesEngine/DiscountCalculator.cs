@@ -120,12 +120,12 @@ namespace RulesEngine
         public decimal CalculateDiscountPercentage(Customer customer)
         {
 
-            var rules = new List<IDiscountRule>();
-            rules.Add(new FirstTimeCustomerRule());
-            rules.Add(new LoyalCustomerDisountRule());
-            rules.Add(new VeteranDiscountRule());
-            rules.Add(new SeniorDiscountRule());
-            rules.Add(new BirthdayDiscountRule());
+            var ruleType = typeof(IDiscountRule);
+
+            IEnumerable<IDiscountRule> rules 
+                = this.GetType().Assembly.GetTypes()
+                .Where(p => ruleType.IsAssignableFrom(p) && !p.IsInterface)
+                .Select(r => Activator.CreateInstance(r) as IDiscountRule);
 
             var engine = new DiscountRuleEngine(rules);
 
